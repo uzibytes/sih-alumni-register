@@ -1,18 +1,23 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 
 import { FaUserAlt, FaCode } from "react-icons/fa";
 import { HiAcademicCap } from "react-icons/hi2";
-import { MdEmail, MdPlace } from "react-icons/md";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { MdPlace } from "react-icons/md";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
+// import * as te from "tw-elements";
 
-import {skills, programs} from "./src/program_data.js"
+import { skills } from "./src/program_data.js";
+
+import Page2 from "../components/page2";
+import LostEmail from "../components/lost_email";
 
 function Home() {
   const [selectedSkill, setSelectedSkill] = useState("");
   const [dropdownSearchValue, setDropdownSearchValue] = useState("");
   const [editMode, setEditMode] = useState(false);
   const dropdownRef = useRef();
+
+  const [menu, setMenu] = useState(0);
 
   useEffect(() => {
     const checkIfClickedOutside = (e: { target: any }) => {
@@ -42,6 +47,17 @@ function Home() {
   const filteredSkills = skills.filter((skill) =>
     skill.match(new RegExp(dropdownSearchValue, "i"))
   );
+
+  if (menu === 5) {
+    return <LostEmail menu = {menu} setMenu={setMenu} />;
+  }
+
+  if (menu === 1) {
+    return <Page2 menu = {menu} setMenu={setMenu} />;
+  }
+  
+
+  console.log(editMode);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
@@ -80,7 +96,7 @@ function Home() {
                     <div ref={dropdownRef} className="dropdown-wrapper">
                       <input
                         placeholder="Search for States/UTs"
-                        className="dropdown-input text-sm pl-2 outline-indblue"
+                        className="dropdown-input text-xs pl-2 outline-indblue w-auto h-8"
                         name="dropdown-input"
                         autoFocus
                         onChange={(e) => setDropdownSearchValue(e.target.value)}
@@ -118,6 +134,7 @@ function Home() {
                         selectedSkill ||
                         "Select your College State*               ▼"
                       }
+                      readOnly={true}
                     />
                   )}
                 </div>
@@ -133,30 +150,43 @@ function Home() {
                 </div>
                 <div className="bg-gray-100 w-72 p-2 flex items-center mb-3">
                   <FaCode className="text-gray-400 m-2" />
-                  <input
-                    type="text"
-                    name="userpart"
-                    placeholder="Participated in :*"
-                    className="bg-gray-100 outline-none text-sm flex-1"
-                  />
+                  <select
+                    name="hackname"
+                    id="hack-name"
+                    required
+                    className="w-64 bg-gray-100 text-sm outline-none"
+                    // data-te-select-init
+                    // multiple
+                  >
+                    <option value="" disabled selected>
+                      Participated in :*
+                    </option>
+                    <option value="sih17">SIH 2017</option>
+                    <option value="sih18">SIH 2018</option>
+                    <option value="sih19">SIH 2019</option>
+                    <option value="sih20">SIH 2020</option>
+                    <option value="sih22">SIH 2022</option>
+                    <option value="singapore19">
+                      SINGAPORE HACKATHON 2019
+                    </option>
+                    <option value="asean21">ASEAN HACKATHON 2021</option>
+                    <option value="uia22">UNESCO HACKATHON 2022</option>
+                  </select>
                 </div>
-                <div className="bg-gray-100 w-72 p-2 flex items-center mb-3">
-                  <MdEmail className="text-gray-400 m-2" />
-                  <input
-                    type="email"
-                    name="useremail"
-                    placeholder="Enter your Current Email Address*"
-                    className="bg-gray-100 outline-none text-sm flex-1"
-                  />
-                </div>
+
                 <div className="flex w-64 mb-5 justify-between">
                   <label className="flex items-center text-xs"></label>
-                  <a href="#" className="text-xs text-indblue">
-                    Lost Your SIH Email
+                  <a
+                    href="#"
+                    className="text-xs text-indblue"
+                    onClick={() => setMenu(5)}
+                  >
+                    Lost Your SIH Email ?
                   </a>
                 </div>
                 <a
-                  href="#"
+                  // href="#"
+                  onClick={() => setMenu(1)}
                   className="border-2 border-indblue text-indblue rounded-full px-12 py-2 inline-block font-semibold hover:bg-indblue hover:text-white"
                 >
                   Next
